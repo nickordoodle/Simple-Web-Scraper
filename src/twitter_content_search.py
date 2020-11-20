@@ -29,10 +29,9 @@ while True:
         # parse the downloaded homepage and grab all text, then,
         soup = BeautifulSoup(response, "lxml")
         print(response)
-        key = "jim"
 
         # if the number of times the word "Google" occurs on the page is less than 1,
-        if str(soup).find(key) == -1:
+        if str(soup).find(config.keyToSearchFor) == -1:
             # wait 20 seconds,
             time.sleep(20)
             # continue with the script,
@@ -43,15 +42,13 @@ while True:
             # create an email message with just a subject line,
             msg = f'Subject: Jim Cramer Tweet: Found "{config.keyToSearchFor}" on his page'
             # set the 'from' address,
-            fromaddr = 'nscherer30@gmail.com'
-            # set the 'to' addresses,
-            toaddrs = ['nick.d.scherer@gmail.com']
+
 
             # setup the email server,
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
             # add my account login name and password,
-            server.login("nscherer30@gmail.com", "dmrwbuzdfdblmrxf")
+            server.login(config.fromEmail, config.gmailLoginAppPass)
 
             # Print the email's contents
             # print('From: ' + fromaddr)
