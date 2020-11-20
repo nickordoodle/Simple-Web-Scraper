@@ -30,10 +30,8 @@ while True:
         s.post("https://www.epicpass.com/account/login", login_data)
         home_page = s.get("https://www.epicpass.com/account")
         print(home_page.content)
-        print(home_page.content)
 
-        #
-        #
+print("change")
         #
         # # Search and Email Notifications
         #
