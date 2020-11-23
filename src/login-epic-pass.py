@@ -12,18 +12,35 @@ web.type('nscherer30@gmail.com' , into='EMAIL')
 web.type('Gummybear30#)' , into='PASSWORD', id='passwordFieldId')
 web.click('SIGN IN' , tag='button') # you are logged in . oohoooo
 
+reservedDays = [26]
 
 time.sleep(5)
 
 web.go_to('epicpass.com/plan-your-trip/lift-access/reservations.aspx')
-
-
-web.click('Park City' , tag='option')
-
-
 time.sleep(2)
 
-web.click('CHECK AVAILABILITY' , tag='button')
+while True:
+    web.click('Park City', tag='option')
+    web.click('CHECK AVAILABILITY' , tag='button')
+    # and not web.exists('23', tag='button', classname='passholder_reservations__calendar__day--disabled')
+    existsVal = web.exists('23', tag='button', classname='passholder_reservations__calendar__day--disabled')
+    if not existsVal:
+        print('found open day on 23rd')
+    else:
+        print(existsVal)
+# if web.exists('26' , tag='button'):
+#
+#     elif web.exists('27' , tag='button'):
+#
+#     elif web.exists('28' , tag='button'):
+#
+#     elif web.exists('29' , tag='button'):
+#     web.click()
+#     web.click('28' , tag='button')
+#     web.click('27' , tag='button')
+
+
+
 
 
 
