@@ -1,61 +1,45 @@
 import time
+import myConfig
 
 from webbot import Browser
 web = Browser()
 web.go_to('epicpass.com/account/login')
-# web.type('hello its me')  # or web.press(web.Key.SHIFT + 'hello its me')
-# web.press(web.Key.ENTER)
-# web.go_back()
-# web.click('Sign in')
-web.type('nscherer30@gmail.com' , into='EMAIL')
-# web.type('mypassword' , into='PASSWORD', id='passwordFieldId')
-web.type('Gummybear30#)' , into='PASSWORD', id='passwordFieldId')
-web.click('SIGN IN' , tag='button') # you are logged in . oohoooo
+web.type(myConfig.fromEmail, into='EMAIL')
+web.type(myConfig.epicLoginPass, into='PASSWORD', id='passwordFieldId')
+web.click('SIGN IN' , tag='button')
+#logged in now
 
-reservedDays = [26]
-
-time.sleep(5)
+daysToReserve = ['26', '27', '28', '29']
 
 web.go_to('epicpass.com/plan-your-trip/lift-access/reservations.aspx')
-time.sleep(2)
 
 while True:
+    time.sleep(2)
     web.click('Park City', tag='option')
-    web.click('CHECK AVAILABILITY' , tag='button')
-    # and not web.exists('23', tag='button', classname='passholder_reservations__calendar__day--disabled')
-    existsVal = web.exists('23', tag='button', classname='passholder_reservations__calendar__day--disabled')
-    if not existsVal:
-        print('found open day on 23rd')
-    else:
-        print(existsVal)
-# if web.exists('26' , tag='button'):
-#
-#     elif web.exists('27' , tag='button'):
-#
-#     elif web.exists('28' , tag='button'):
-#
-#     elif web.exists('29' , tag='button'):
-#     web.click()
-#     web.click('28' , tag='button')
-#     web.click('27' , tag='button')
+    web.click('CHECK AVAILABILITY', tag='button')
+    for day in daysToReserve:
+        # Check to see if day is available
+        isDayAvailable = web.exists(day, tag='button', classname='passholder_reservations__calendar__day--disabled')
+        if not isDayAvailable:
+            import smtplib
+            msg = f'Subject: NOV {day} IS OPEN!!! https://www.epicpass.com/plan-your-trip/lift-access/reservations.aspx'
+            # set the 'from' address,
+            fromaddr = myConfig.fromEmail
+            # setup the email server,
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            # add my account login name and password,
+            server.login(fromaddr, myConfig.gmailLoginAppPass)
+            # Print the email's contents
+            print('From: ' + fromaddr)
+            print('To: ' + str(myConfig.emailList))
+            print('Message: ' + msg)
+            # send the email
+            server.sendmail(fromaddr, myConfig.emailList, msg)
+            # disconnect from the server
+            server.quit()
+        else:
+            print(f'{isDayAvailable} epic pass day not available.')
 
-
-
-
-
-
-#--------------------------------------------------------------------------
-
-# # If multiple buttons with similar properties are to be clicked at once
-# web = Browser()
-# web.go_to('siteurl.com')
-# web.click('buttontext' , multiple = True)
-#
-# #--------------------------------------------------------------------------
-#
-# # If there are multiple elements and you want to perform action on one of them :
-# web = Browser()
-# web.go_to('siteurl.com')
-#
-# # types the text into the 3rd input element when there are multiple input elements with form-input class
-# web.type('im robo typing' , number = 3 , classname="form-input" )
+    web.click('Okema', tag='option')
+    web.click('CHECK AVAILABILITY', tag='button')
